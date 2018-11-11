@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="styles/elementUI.css">
     <!-- 引入首页的样式 -->
     <link rel="stylesheet" href="styles/index.css">
+     <!-- 使用script标签发起同步请求 -->
+     <script src="/users/checkState"></script>
 </head>
 
 <body>
@@ -86,10 +88,11 @@
                 //编辑和删除的方法
                 handleEdit(id) {
                     console.log("编辑", id);
+                    //点击修改按钮，把id传给修改页面member_edit.html;
+                    location.href="member_edit.html?id="+id;
                 },
                 handleDelete(id) {
                     console.log("删除", id);
-
                     $.get("/users/del/",{id},(result)=>{
                        console.log(result);
                         if(result.isOk){
