@@ -31,12 +31,12 @@ router.post('/add', function(req, res, next) {
 // 获取商品分类列表的路由
 router.get("/list",(req,res)=>{
    //构造sql
-   let sqlStr="select * from categoryGoods order by cg_id DESC";
+   let sqlStr="select t1.*,t2.cg_name as father_name from categorygoods as t1 left join categorygoods as t2 on t1.cg_fatherID=t2.cg_id";
 
    //执行sql
-   connection.query(sqlStr,(err,categoryList)=>{
+   connection.query(sqlStr,(err,datalist)=>{
       if(err) throw err;
-      res.send(categoryList);
+      res.send(datalist);
    });
 });
 

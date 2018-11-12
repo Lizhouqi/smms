@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var categoryRouter = require('./routes/category');
+var goodsRouter = require('./routes/goods');
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/category",categoryRouter)
+app.use("/goods",goodsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,8 +42,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(9090,()=>{
-  console.log("项目已启动。。。请访问：http://127.0.0.1:9090")
+app.listen(1314,()=>{
+  console.log("项目已启动。。。请访问：http://127.0.0.1:1314")
 })
 
 module.exports = app;
