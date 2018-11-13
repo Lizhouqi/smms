@@ -71,6 +71,8 @@
                 //编辑和删除的方法
                 handleEdit(id) {
                     console.log("编辑的id", id);
+                    //把id传给修改页面category_edit.html
+                    location.href="category_edit.html?id="+id;
                 },
                 handleDelete(id) {
                    console.log("删除的id", id);

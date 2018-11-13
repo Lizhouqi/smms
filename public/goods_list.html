@@ -130,11 +130,11 @@
                 //编辑和删除的方法
                 handleEdit(id) {
                     console.log("编辑的id", id);
-
+                    //把id传给修改页面goods_edit.html;
+                        location.href="goods_edit.html?id"+id;
                 },
                 handleDelete(id) {
                     //console.log("删除的id", id);
-
                     $.get("/goods/del/",{id},(result)=>{
                        console.log(result);
                         if(result.isOk){

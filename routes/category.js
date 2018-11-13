@@ -58,9 +58,39 @@ connection.query(sqlStr,sqlParams,function(error,result){
 
 });
 
+
+
 //3）接收新的数据并把新的数据update到数据库中
-router.post('/save', function(req, res, next) {
-   res.send("保存分类");
+//根据id获取用户数据的路由
+router.get("/getgoodsByID", (req, res) => {
+  //接收用户
+  let id = req.query.id;
+
+  let sqlStr = "select * from categorygoods where cg_id=?";
+  let sqlStrPamer = [id];
+
+  connection.query(sqlStr, sqlStrPamer, function (error, userData) {
+    if (error) throw error;
+    res.send(userData);
+  });
+});
+//把新旧数据库进行比较
+router.post("/save", function (req, res, next) {
+  let {cg_name, cg_fatherID, cg_isLocked, cg_id } = req.body;
+
+  //链接数据库
+  let sqlStr = "update categorygoods set cg_name=?,cg_fatherID=?,cg_isLocked=? where cg_id=?";
+  let sqlStrPamer = [cg_name, cg_fatherID, cg_isLocked, cg_id];
+
+  connection.query(sqlStr, sqlStrPamer, function (error, results) {
+    if (error) throw error;
+
+    if (results.affectedRows > 0) {
+      res.send({ "isOk": true, "msg": "账号修改成功！！" })
+    } else {
+      res.send({ "isOk": false, "msg": "账号修改失败！！" })
+    }
+  });
 });
 
 module.exports = router;

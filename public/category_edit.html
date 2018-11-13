@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>超市管理系统——商品分类添加</title>
+    <title>超市管理系统——商品分类修改</title>
     <!-- 引入重置样式 -->
     <link rel="stylesheet" href="styles/reset.css">
     <!-- 引入elementUI -->
@@ -21,7 +21,7 @@
                 <el-main>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>添加商品分类</span>
+                            <span>修改商品分类</span>
                         </div>
                         <div class="text item">
                             <!-- 商品分类的页面 -->
@@ -48,7 +48,6 @@
                                   
                                 <el-form-item>
                                     <el-button type="success" @click="submitForm('ruleForm2')">添加分类</el-button>
-                                  
                                 </el-form-item>
                             </el-form>
                         </div>
@@ -72,7 +71,8 @@
                     ruleForm2: {
                         cg_fatherID: '',
                         cg_name: '',
-                        cg_isLocked: "1"
+                        cg_isLocked: "1",
+                        cg_id:'',
                     },
                     categoryList:[], //下拉列表的数据源
                     rules2: {
@@ -85,12 +85,6 @@
                     }
                 };
             },
-            mounted() {
-                $.get("/category/list",(dataList)=> {
-                    //把ajax请求获取的分类修改到模型上面
-                    this.categoryList=dataList;
-                });
-            },
             methods: {
                 //提交表单
                 submitForm(formName) {
@@ -98,17 +92,15 @@
                         if (valid) {
                             //表单验证通过
                             //console.log(this.ruleForm2);
-                            $.post("/category/add",this.ruleForm2,function (result) {
+                            $.post("/category/save",this.ruleForm2,function (result) {
                                //处理业务逻辑 
                               // console.log(result);
                                if(result.isOk){
-                                   if(confirm("继续添加吗?")){
-                                       location.href="category_list.html";
-                                   }else{
-                                       location.reload();
-                                   } 
+                                   alert(result.msg);
+                                   location.href="category_list.html";
                                }else{
                                    alert(result.msg);
+                                   return false;
                                }
                                
                             });
@@ -117,12 +109,30 @@
                             return false;
                         }
                     });
-                },
-                //重置表单
-                resetForm(formName) {
-                    this.$refs[formName].resetFields();
-                }
-            }
+                }, 
+            },
+            mounted() {
+                //2）在修改页面中获取修改的id
+                //地址： member_edit.html?id=100
+                let reqUrl=location.href;
+                let id=reqUrl.split("=")[1];
+                //console.log("修改用户的id",id);
+
+                //3）发起ajax请求去获取旧的用户数据
+                $.get("/category/getgoodsByID",{id},(userData)=>{
+                    //4）旧的数据获取到后更新页面的dom（修改数据属性vue会自动帮我们实现） 
+                    console.log(userData);
+                    //由于使用的是vue的双向数据绑定，修改模型中的数据属性，视图会发生改变
+                    let data=userData[0];
+                    //{u_id: 47, userName: "gay可亮1", userPwd: "e10adc3949ba59abbe56e057f20f883e", userGroup: "超级管理员"}
+                   
+                    this.ruleForm2.cg_name=data.cg_name;
+                    this.ruleForm2.cg_fatherID=data.cg_fatherID; //暂存的旧密码
+                    this.ruleForm2.cg_isLocked=data.cg_isLocked;
+                    this.ruleForm2.cg_id=data.cg_id; //把要修改的id也改到模型中
+                });
+            },
+           
         });
     </script>
 </body>
